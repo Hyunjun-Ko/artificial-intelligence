@@ -65,8 +65,11 @@ run **python3 main.py -h** for information on how to run.
 ## HMM POS tagging
 
 baseline.py
+
 viterbi_1.py
+
 viterbi_2.py
+
 viterbi_3.py
 
 The code reads data from two files. THe tagging functions are given the training data with tags and the test data without tags. The tagger tnen infer tags for the test data input. THe main.py function will compare these against the correct tags and report accuracy.
