@@ -61,3 +61,81 @@ we set up the posterior probabilities just as the unigram model into a mixture m
 we need to find the best parameter $\lambda$ that gives the highest classification accuracy.
 
 run **python3 main.py -h** for information on how to run. 
+
+## HMM POS tagging
+
+baseline.py
+viterbi_1.py
+viterbi_2.py
+viterbi_3.py
+
+The code reads data from two files. THe tagging functions are given the training data with tags and the test data without tags. The tagger tnen infer tags for the test data input. THe main.py function will compare these against the correct tags and report accuracy.
+
+__Training and development data__
+
+Brown corpus: data/brown-training.txt, data/brown-dev.txt
+
+__Running the code__
+The code converts all words to lowercase. It also adds a START and END tag for each sentence when it loads the sentence. These tags are just for standardization. They will not be considered in accuracy computation.
+
+To run the code on the Brown corpus data you need to tell it where the data is and which algorithm to run, either baseline, viterbi_1, viterbi_2, or viterbi_3:
+
+python3 main.py --train data/brown-training.txt --test data/brown-dev.txt --algorithm [baseline, viterbi_1, viterbi_2, viterbi_3]
+
+The program will run the algorithm and report three accuracy numbers:
+
+1. overall accuracy
+2. accuracy on words that have been seen with multiple different tags
+3. accuracy on unseen words
+
+__Tagset__
+
+The following is an example set of 16 part of speech tags. This is the tagset used in the provided Brown corpus.
+
+* ADJ adjective
+* ADV adverb
+* IN preposition
+* PART particle (e.g. after verb, looks like a preposition)
+* PRON pronoun
+* NUM number
+* CONJ conjunction
+* UH filler, exclamation
+* TO infinitive
+* VERB verb
+* MODAL modal verb
+* DET determiner
+* NOUN noun
+* PERIOD end of sentence punctuation
+* PUNCT other punctuation
+* X miscellaneous hard-to-classify items
+
+__Baseline tagger__
+
+The Baseline tagger considers each word independently, ignoring previous words and tags. For each word w, it counts how many times w occurs with each tag in the training data. When processing the test data, it consistently gives w the tag that was seen most often. For unseen words, it should guess the tag that's seen the most often in training dataset.
+
+A correctly working baseline tagger should get about 93.9% accuracy on the Brown corpus development set, with over 90% accuracy on multitag words and over 69% on unseen words.
+
+__Viterbi_1__
+
+The Viterbi tagger implements the HMM trellis (Viterbi) decoding algoirthm. That is, the probability of each tag depends only on the previous tag, and the probability of each word depends only on the corresponding tag. This model will need to estimate three sets of probabilities:
+
+* Initial probabilities (How often does each tag occur at the start of a sentence?)
+* Transition probabilities (How often does tag t_b follow tag t_a?)
+* Emission probabilities (How often does tag t yield word w?)
+
+1. count occurrences of tags, tag pairs, tag/word pairs.
+2. Compute smoothed probabilities
+3. Take the log of each probability
+4. Construct the trellis. 
+5. Return the best path through the trellis.
+
+This simple version of Viterbi will perform worse than the baseline code for the Brown development dataset (somewhat over 93% accuracy). However you should notice that it's doing better on the multiple-tag words (e.g. over 93.5%). 
+
+__Viterbi_2__
+
+The previous Vitebi tagger fails to beat the baseline because it does very poorly on unseen words. It's assuming that all tags have similar probability for these words, but we know that a new word is much more likely to have the tag NOUN than (say) CONJ. Viterbi_2 improve upon the emission smoothing to match the real probabilities for unseen words.
+
+Words that occur only once in the training data ("hapax" words) have a distribution similar to the words that appear only in the test/development data. It extracts these words from the training data and calculate the probability of each tag on them. For Laplace smoothing of the emission probabilities for tag T, it scales Laplace smoothing constant by the corresponding probability of tag T occurs among the set hapax words.
+
+This optimized version of the Viterbi code should have a significantly better unseen word accuracy on the Brown development dataset, e.g. over 66.5%. It also beat the baseline on overall accuracy (e.g. 95.5%). 
+
