@@ -139,3 +139,38 @@ Words that occur only once in the training data ("hapax" words) have a distribut
 
 This optimized version of the Viterbi code should have a significantly better unseen word accuracy on the Brown development dataset, e.g. over 66.5%. It also beat the baseline on overall accuracy (e.g. 95.5%). 
 
+## Classification
+
+requires numpy
+
+In ./classify.py,
+def trainPerceptron():
+def classifyPerceptron():
+def classifyKNN():
+
+This project aims to classify which images have animals in them using two different classification algorithms. Using the given training set, .classify.py will train a perceptron and K-nearest neighbor to predict the right class label for an unseen image.
+
+**Dataset (animal_dataset)**
+
+The dataset consists of 10,000 32x32 colored images total, which is a subset of the CIFAR_10 dataset, provided by Alex Krizhevsky. The dataset is split into 2500 development and 7500 training examples. (Images have their RGB values scaled to range 0 - 1)
+
+**Perceptron Model**
+
+The perceptron model is a linear function that tries to separate data into two or more classes with a set of weights w<sub>i</sub>, bias *b* and features x<sub>1</sub>,...,x<sub>n</sub>.
+
+
+<img src="Classification/img.png" >
+
+The perceptron learning algorithm in def trainPerceptron(): will find good weight paramenters w<sub>i</sub>, and bias *b* such that sign(f<sub>w,b</sub>(x)) > 0 when there is an animal in the image and sign(f<sub>w,b</sub>(x)) < 0 when there is not. (The images are 32x32 and has three RGB color channels which yields 32x32x3 = 3,072 features.)
+
+**K-nearest neighbors Model**
+
+k-NN is a type of classification where the function only classifies locally and all computation is deferred until evaluation. it uses euclidean distance and looks at user-defined k nearest neighbors to determine whether there is an animal in the image or not. when there is a tie, the negative label is assigned. (no animal class)
+
+[K-Nearest Neighbors wikipedia](https://ai.stanford.edu/~amaas/data/sentiment/)
+
+**Running the code**
+
+In classification directory, 
+
+"python3 main.py --h"
