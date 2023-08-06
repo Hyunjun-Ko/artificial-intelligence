@@ -65,8 +65,11 @@ run **python3 main.py -h** for information on how to run.
 ## HMM POS tagging
 
 baseline.py
+
 viterbi_1.py
+
 viterbi_2.py
+
 viterbi_3.py
 
 The code reads data from two files. THe tagging functions are given the training data with tags and the test data without tags. The tagger tnen infer tags for the test data input. THe main.py function will compare these against the correct tags and report accuracy.
@@ -76,6 +79,7 @@ __Training and development data__
 Brown corpus: data/brown-training.txt, data/brown-dev.txt
 
 __Running the code__
+
 The code converts all words to lowercase. It also adds a START and END tag for each sentence when it loads the sentence. These tags are just for standardization. They will not be considered in accuracy computation.
 
 To run the code on the Brown corpus data you need to tell it where the data is and which algorithm to run, either baseline, viterbi_1, viterbi_2, or viterbi_3:
